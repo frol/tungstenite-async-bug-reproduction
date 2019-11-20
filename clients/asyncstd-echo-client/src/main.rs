@@ -21,16 +21,21 @@ async fn run() {
 
     spawn(async move {
         let mut received = 0usize;
-        while let Some(_) = ws_rx.next().await {
-            received += 1;
-            if received % 100_000 == 0 {
-                println!("Received: {}", received);
-            }
-            if received >= ITERATIONS {
+        loop {
+            if let Some(_) = ws_rx.next().await {
+                received += 1;
+                if received % 100_000 == 0 {
+                    println!("Received: {}", received);
+                    if received >= ITERATIONS {
+                        break;
+                    }
+                }
+            } else {
+                println!("Received: no new messages (ws_rx.next() is None)");
                 break;
             }
         }
-        println!("Received: DONE");
+        println!("Received: ended with {} messages", received);
         quit_tx.send(()).unwrap();
     });
 

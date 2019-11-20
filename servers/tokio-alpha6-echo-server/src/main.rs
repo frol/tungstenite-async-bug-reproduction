@@ -1,6 +1,6 @@
 //! COPIED FROM: https://github.com/dbcfd/tokio-tungstenite/blob/tokio2/examples/server.rs
 //!
-//! 
+//!
 //! A chat server that broadcasts a message to all connections.
 //!
 //! This is a simple line-based server which accepts WebSocket connections,
@@ -54,7 +54,6 @@ async fn accept_connection(stream: TcpStream) {
         .await
         .expect("Error during the websocket handshake occurred");
 
-
     // Create a channel for our stream, which other sockets will use to
     // send us messages. Then register our address with the stream to send
     // data to us.
@@ -73,7 +72,10 @@ async fn accept_connection(stream: TcpStream) {
             .unbounded_send(message)
             .expect("Failed to forward request");
         if let Some(resp) = response_rx.next().await {
-            ws_stream.send(resp).await.expect("Failed to send response");
+            while let Err(error) = ws_stream.send(resp.clone()).await {
+                println!("Failed to send response: {:?}", error);
+                tokio::timer::delay_for(std::time::Duration::from_secs(1)).await;
+            }
         }
     }
 }

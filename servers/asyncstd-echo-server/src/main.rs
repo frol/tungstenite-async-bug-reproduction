@@ -21,7 +21,6 @@
 //! messages.
 
 use std::env;
-use std::io::Error;
 
 use async_std::net::{TcpListener, TcpStream};
 use futures::channel::mpsc::{UnboundedReceiver, UnboundedSender};
@@ -72,7 +71,10 @@ async fn accept_connection(stream: TcpStream) {
             .unbounded_send(message)
             .expect("Failed to forward request");
         if let Some(resp) = response_rx.next().await {
-            ws_stream.send(resp).await.expect("Failed to send response");
+            while let Err(error) = ws_stream.send(resp.clone()).await {
+                println!("Failed to send response: {:?}", error);
+                async_std::task::sleep(std::time::Duration::from_secs(1)).await;
+            }
         }
     }
 }
@@ -86,7 +88,7 @@ async fn run() {
 
     // Create the event loop and TCP listener we'll accept connections on.
     let try_socket = TcpListener::bind(&addr).await;
-    let mut listener = try_socket.expect("Failed to bind");
+    let listener = try_socket.expect("Failed to bind");
 
     while let Ok((stream, _)) = listener.accept().await {
         async_std::task::spawn(accept_connection(stream));
