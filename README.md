@@ -17,16 +17,22 @@ and tokio variants are based on mostly the same tungstenite implementation:
   [ported](https://github.com/snapview/tokio-tungstenite/pull/68#issuecomment-552088308)
   from tokio-tungstenite
 
+The testing environment:
+
+* Intel Core i7 4710HQ
+* Arch Linux x64, Linux kernel 4.19.84-1-lts
+* 10 million echo messages sent and received concurrently
+
 | Client \ Server | actix               | async-std | tokio 0.2-alpha6  | tokio master |
 | --------------- | ------------------- | --------- | ----------------- | ------------ |
 | async-std       | 25s                 | 32s       | 65s               | 45s          |
 | tokio 0.2alpha6 | 42s                 | 59s       | stuck             | 44s          |
 | tokio master    | 18s <sup>(*1)</sup> | stuck     | stuck             | stuck        |
 
-(*1) - The implementation can deadlock if you increase the number of iterations
+(*1) The implementation stuck if you increase the number of iterations
 as it sends messages faster than receives.
 
-(stuck) - client stops sending or receiving messages
+(stuck) client stops sending or receiving messages for no apparent reason.
 
 Side notes:
 
