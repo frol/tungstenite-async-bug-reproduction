@@ -24,14 +24,14 @@ The testing environment:
 * Rust stable 1.39 (the results are the same for Rust nightly as well)
 * 10 million echo messages sent and received concurrently
 
-| Client \ Server | actix               | async-std | tokio 0.2-alpha6  | tokio master |
-| --------------- | ------------------- | --------- | ----------------- | ------------ |
-| async-std       | 25s                 | 32s       | 65s               | 45s          |
-| tokio 0.2alpha6 | 42s                 | 59s       | stuck             | 44s          |
-| tokio master    | 18s <sup>(*1)</sup> | stuck     | stuck             | stuck        |
+| Client \ Server | actix                | async-std | tokio 0.2-alpha6  | tokio master |
+| --------------- | -------------------- | --------- | ----------------- | ------------ |
+| async-std       | 25s                  | 32s       | 65s               | 45s          |
+| tokio 0.2alpha6 | 42s                  | 59s       | stuck             | 44s          |
+| tokio master    | stuck<sup>(*1)</sup> | stuck     | stuck             | stuck        |
 
-(*1) The implementation stuck if you increase the number of iterations
-as it sends messages faster than receives.
+(*1) The implementation may complete in blazing 18s or stuck if you increase
+the number of iterations as it sends messages faster than receives.
 
 (stuck) client stops sending or receiving messages for no apparent reason.
 
