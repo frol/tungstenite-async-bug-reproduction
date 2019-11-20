@@ -21,6 +21,7 @@ The testing environment:
 
 * Intel Core i7 4710HQ
 * Arch Linux x64, Linux kernel 4.19.84-1-lts
+* Rust stable 1.39 (the results are the same for Rust nightly as well)
 * 10 million echo messages sent and received concurrently
 
 | Client \ Server | actix               | async-std | tokio 0.2-alpha6  | tokio master |
@@ -39,3 +40,11 @@ Side notes:
 1. actix server implementation is the fastest.
 2. async-std client implementation is stable and faster than tokio given the
    async-tungstenite shares the codebase from tokio-tungstenite.
+
+How to run?
+-----------
+
+1. Pick a server implemention from `./servers` folder, change directory, and
+   do `cargo run --release`
+2. Pick a client implementation from `./clients` folder, change directory, and
+   do `cargo run --release ws://127.0.0.1:8080/ws`
