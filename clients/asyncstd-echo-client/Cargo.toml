@@ -1,5 +1,5 @@
 [package]
-name = "tokio-master-echo-server"
+name = "asyncstd-echo-server"
 version = "0.1.0"
 authors = ["Vlad Frolov <frolvlad@gmail.com>"]
 edition = "2018"

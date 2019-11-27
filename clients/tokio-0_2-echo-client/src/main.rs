@@ -6,7 +6,7 @@ use tungstenite::protocol::Message;
 use tokio::spawn;
 use tokio_tungstenite::connect_async;
 
-const ITERATIONS: usize = 100_000_000;
+const ITERATIONS: usize = 10_000_000;
 
 async fn run() {
     let connect_addr = env::args()
